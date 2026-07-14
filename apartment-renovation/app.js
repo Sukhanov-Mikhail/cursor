@@ -1,6 +1,6 @@
 (() => {
-  const steps = document.querySelectorAll(".process-step");
-  if (steps.length && "IntersectionObserver" in window) {
+  const rows = document.querySelectorAll(".spec-table tbody tr");
+  if (rows.length && "IntersectionObserver" in window) {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -10,11 +10,14 @@
           }
         });
       },
-      { threshold: 0.25, rootMargin: "0px 0px -8% 0px" }
+      { threshold: 0.15, rootMargin: "0px 0px -5% 0px" }
     );
-    steps.forEach((step) => observer.observe(step));
+    rows.forEach((row, index) => {
+      row.style.transitionDelay = `${Math.min(index, 10) * 40}ms`;
+      observer.observe(row);
+    });
   } else {
-    steps.forEach((step) => step.classList.add("is-visible"));
+    rows.forEach((row) => row.classList.add("is-visible"));
   }
 
   const form = document.querySelector(".contact-form");
@@ -31,7 +34,7 @@
         existing.push({ ...payload, at: new Date().toISOString() });
         localStorage.setItem("atrium-leads", JSON.stringify(existing));
       } catch {
-        /* ignore quota / private mode */
+        /* ignore */
       }
       form.reset();
       note.hidden = false;
